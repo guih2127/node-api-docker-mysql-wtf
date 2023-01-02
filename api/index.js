@@ -1,13 +1,7 @@
 const express = require("express");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const app = express();
-const dotenv = require("dotenv").config()
-
-if (dotenv.error) {
-  throw dotenv.error
-}
-
-console.log(process.env)
+require("dotenv").config()
 
 const connection = mysql.createPool({
   connectionLimit: 10,
@@ -18,7 +12,7 @@ const connection = mysql.createPool({
 });
 
 app.get("/", (req, res) => {
-  connection.query("SELECT * FROM Student", (err, rows) => {
+  connection.query("SELECT * FROM Animal", (err, rows) => {
     if (err) {
       res.json({
         success: false,
