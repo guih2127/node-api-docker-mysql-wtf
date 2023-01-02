@@ -1,14 +1,18 @@
 version: "3.8"
 services:
   db:
+    container_name: pets-database
+    ports:
+      - 3306:3306
     build: ./db
     env_file:
-    - db.env
+      - ./db/db.env
     restart: always
   web:
-    build: ./web
+    container_name: pets-api
+    build: ./api
     env_file:
-    - .env
+      - ./api/.env
     ports:
       - "5000:5000"
     depends_on:
