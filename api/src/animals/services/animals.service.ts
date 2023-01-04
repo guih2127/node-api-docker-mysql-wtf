@@ -1,5 +1,5 @@
-import { IModelCreationUtils } from "../../utils/interfaces/model.creation.utils";
-import CreateGuid from "../../utils/model.creation.utils";
+import ModelCreationUtils from "../../utils/model.creation.utils";
+import { AnimalDto } from "../dtos/animal.dto";
 import { SaveAnimalDto } from "../dtos/save.animal.dto";
 import { AnimalModel } from "../models/animals.model";
 import { IAnimalsRepository } from "../repositories/interfaces/animals.repository";
@@ -7,20 +7,18 @@ import { IAnimalsService } from "./interfaces/animals.service";
 
 export class AnimalsService implements IAnimalsService {
     private readonly animalsRepository: IAnimalsRepository;
-    private readonly modelCreationUtils: IModelCreationUtils;
 
-    constructor(animalsRepository: IAnimalsRepository, modelCreationUtils: IModelCreationUtils) {
-        this.animalsRepository = animalsRepository;
-        this.modelCreationUtils = modelCreationUtils
+    constructor(animalsRepository: IAnimalsRepository) {
+        this.animalsRepository = animalsRepository
     }
 
-    async GetAll(): Promise<AnimalModel[]> {
+    public async GetAll(): Promise<AnimalModel[]> {
         return await this.animalsRepository.GetAll();
     }
     
-    async Insert(animal: SaveAnimalDto): Promise<string> {
+    public async Insert(animal: SaveAnimalDto): Promise<string> {
         const animalModel = new AnimalModel(
-            this.modelCreationUtils.CreateGuid(),
+            ModelCreationUtils.CreateGuid(),
             animal.name,
             animal.species,
             animal.breed,
@@ -31,5 +29,25 @@ export class AnimalsService implements IAnimalsService {
 
         return await this.animalsRepository.Insert(animalModel);
         // retornar getById
+    }
+
+    public async GetById(id: string): Promise<AnimalDto | undefined> {
+        const animal = await this.animalsRepository.GetById(id);
+
+        if (animal) {
+            const animalDto = new AnimalDto(
+                animal?.id,
+                animal.name,
+                animal.species,
+                animal.breed,
+                animal.photo,
+                animal.adopted,
+                animal.userId
+            );
+
+            return animal;
+        }
+
+        return undefined;
     }
 }

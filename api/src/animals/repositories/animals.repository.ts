@@ -8,12 +8,18 @@ export class AnimalsRepository implements IAnimalsRepository {
         this.animals = animals ?? [];
     }
 
-    async Insert(animal: AnimalModel): Promise<string> {
+    public async GetById(id: string): Promise<AnimalModel | undefined> {
+        const animal = await this.animals.find(x => x.id == id);
+        return animal;
+    }
+
+    public async Insert(animal: AnimalModel): Promise<string> {
         await this.animals.push(animal);
         return animal.id;
     }
 
-    async GetAll(): Promise<AnimalModel[]> {
-        return await this.animals;
+    public async GetAll(): Promise<AnimalModel[]> {
+        const animals = await this.animals;
+        return animals;
     }
 }

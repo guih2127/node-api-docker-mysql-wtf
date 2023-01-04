@@ -1,29 +1,30 @@
+import ModelCreationUtils from "../../../utils/model.creation.utils";
+import { AnimalDto } from "../../dtos/animal.dto";
 import { SaveAnimalDto } from "../../dtos/save.animal.dto";
 import { AnimalModel } from "../../models/animals.model";
-import ModelCreationUtils from "../../../utils/model.creation.utils";
 
-const modelCreationUtils = new ModelCreationUtils();
-
-export const guidMockedValue: string = "111111";
+export const guidMockedValue1 = "111111";
+export const guidMockedValue2 = "222222";
+export const guidMockedValue3 = "333333";
 
 export const animalsMock: AnimalModel[] = [
     new AnimalModel(
-        modelCreationUtils.CreateGuid(),
+        guidMockedValue1,
         "Name 1", 
         "Species 1", 
         "Breed 1", 
         "Photo 1", 
         true, 
-        modelCreationUtils.CreateGuid()
+        ModelCreationUtils.CreateGuid()
     ),
     new AnimalModel(
-        modelCreationUtils.CreateGuid(),
+        guidMockedValue2,
         "Name 2", 
         "Species 2", 
         "Breed 2", 
         "Photo 2", 
         false, 
-        modelCreationUtils.CreateGuid()
+        ModelCreationUtils.CreateGuid()
     )
 ];
 
@@ -33,11 +34,21 @@ export const newAnimalDtoMock = new SaveAnimalDto(
     "Breed 3",
     "Photo 3",
     false,
-    modelCreationUtils.CreateGuid()
-)
+    ModelCreationUtils.CreateGuid()
+);
+
+export const animalDtoMock = new AnimalDto (
+    guidMockedValue3,
+    "Name 3",
+    "Species 3",
+    "Breed 3",
+    "Photo 3",
+    false,
+    newAnimalDtoMock.userId
+);
 
 export const newAnimalModelMock = new AnimalModel(
-    guidMockedValue,
+    guidMockedValue3,
     "Name 3",
     "Species 3",
     "Breed 3",
