@@ -1,5 +1,5 @@
 import express from 'express';
-import { IAnimalsService } from '../services/animals.service';
+import { IAnimalsService } from '../services/interfaces/animals.service';
 
 export class AnimalsController {
     private readonly animalsService: IAnimalsService;
@@ -8,8 +8,7 @@ export class AnimalsController {
         this.animalsService = animalsService;
     }
 
-    // todo - type this method
-    async listAllPets(req: express.Request, res: express.Response) {
+    async listAllPets(req: express.Request, res: express.Response): Promise<void> {
         const animals = await this.animalsService.getAll();
         res.status(201).send(animals);
     }

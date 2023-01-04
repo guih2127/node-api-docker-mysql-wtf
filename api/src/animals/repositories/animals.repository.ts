@@ -2,10 +2,18 @@ import { AnimalModel } from "../models/animals.model";
 import { IAnimalsRepository } from "./interfaces/animals.repository";
 
 export class AnimalsRepository implements IAnimalsRepository {
-    animals: AnimalModel[] = [
-        new AnimalModel("guid", "name", "species", "breed", "photo", false, "userId")
-    ]
-    async getAll(): Promise<AnimalModel[]> {
+    private animals: AnimalModel[];
+
+    constructor(animals?: AnimalModel[]) {
+        this.animals = animals ?? [];
+    }
+
+    async Insert(animal: AnimalModel): Promise<string> {
+        await this.animals.push(animal);
+        return animal.id;
+    }
+
+    async GetAll(): Promise<AnimalModel[]> {
         return await this.animals;
     }
 }
