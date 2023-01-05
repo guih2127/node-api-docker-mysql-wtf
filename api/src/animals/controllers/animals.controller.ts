@@ -9,7 +9,7 @@ export class AnimalsController {
     }
 
     async listAllPets(req: express.Request, res: express.Response): Promise<void> {
-        const animals = await this.animalsService.getAll();
+        const animals = await this.animalsService.GetAll();
         res.status(201).send(animals);
     }
 }

@@ -16,7 +16,7 @@ export class AnimalsService implements IAnimalsService {
         return await this.animalsRepository.GetAll();
     }
     
-    public async Insert(animal: SaveAnimalDto): Promise<string> {
+    public async Insert(animal: SaveAnimalDto): Promise<AnimalDto | undefined> {
         const animalModel = new AnimalModel(
             ModelCreationUtils.CreateGuid(),
             animal.name,
@@ -27,8 +27,24 @@ export class AnimalsService implements IAnimalsService {
             animal.userId
         );
 
-        return await this.animalsRepository.Insert(animalModel);
-        // retornar getById
+        const insertedAnimalId = await this.animalsRepository.Insert(animalModel);
+        const insertedAnimal = await this.animalsRepository.GetById(insertedAnimalId);
+
+        if (insertedAnimal) {
+            const animalDto = new AnimalDto(
+                insertedAnimal?.id,
+                insertedAnimal.name,
+                insertedAnimal.species,
+                insertedAnimal.breed,
+                insertedAnimal.photo,
+                insertedAnimal.adopted,
+                insertedAnimal.userId
+            );
+
+            return animalDto;
+        }
+
+        return undefined;
     }
 
     public async GetById(id: string): Promise<AnimalDto | undefined> {
@@ -45,9 +61,14 @@ export class AnimalsService implements IAnimalsService {
                 animal.userId
             );
 
-            return animal;
+            return animalDto;
         }
 
         return undefined;
+    }
+
+    public async Delete(id: string): Promise<string | undefined> {
+        const deletedAnimalId = await this.animalsRepository.Delete(id);
+        return deletedAnimalId;
     }
 }

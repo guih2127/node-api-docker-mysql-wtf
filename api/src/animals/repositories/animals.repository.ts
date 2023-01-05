@@ -1,12 +1,9 @@
 import { AnimalModel } from "../models/animals.model";
+import animalsMockObjects from "../tests/mocks/animals.mock.objects";
 import { IAnimalsRepository } from "./interfaces/animals.repository";
 
 export class AnimalsRepository implements IAnimalsRepository {
-    private animals: AnimalModel[];
-
-    constructor(animals?: AnimalModel[]) {
-        this.animals = animals ?? [];
-    }
+    public animals = animalsMockObjects.animalsMock;
 
     public async GetById(id: string): Promise<AnimalModel | undefined> {
         const animal = await this.animals.find(x => x.id == id);
@@ -21,5 +18,16 @@ export class AnimalsRepository implements IAnimalsRepository {
     public async GetAll(): Promise<AnimalModel[]> {
         const animals = await this.animals;
         return animals;
+    }
+
+    public async Delete(id: string): Promise<string | undefined> {
+        const removeIndex = this.animals.findIndex(x => {
+            return x.id === id 
+        });
+
+        const removedAnimal = this.animals.splice(removeIndex, 1);
+        if (removedAnimal)
+            return removedAnimal[0].id;
+        return undefined;
     }
 }
