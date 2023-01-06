@@ -1,6 +1,7 @@
 import ModelCreationUtils from "../../utils/model.creation.utils";
 import { AnimalDto } from "../dtos/animal.dto";
 import { SaveAnimalDto } from "../dtos/save.animal.dto";
+import AnimalsDtoToModelMapper from "../mappers/animals.dto.to.model.mapper";
 import AnimalsModelToDtoMapper from "../mappers/animals.model.to.dto.mapper";
 import { AnimalModel } from "../models/animals.model";
 import { IAnimalsRepository } from "../repositories/interfaces/animals.repository";
@@ -18,7 +19,7 @@ export class AnimalsService implements IAnimalsService {
     }
     
     public async Insert(animal: SaveAnimalDto): Promise<AnimalDto | undefined> {
-        const animalModel = AnimalsModelToDtoMapper.MapSaveAnimalDtoToModel(animal);
+        const animalModel = AnimalsDtoToModelMapper.MapSaveAnimalDtoToModel(animal);
 
         const insertedAnimalId = await this.animalsRepository.Insert(animalModel);
         const insertedAnimal = await this.animalsRepository.GetById(insertedAnimalId);
