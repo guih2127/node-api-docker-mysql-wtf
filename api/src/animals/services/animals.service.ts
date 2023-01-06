@@ -1,4 +1,3 @@
-import ModelCreationUtils from "../../utils/model.creation.utils";
 import { AnimalDto } from "../dtos/animal.dto";
 import { SaveAnimalDto } from "../dtos/save.animal.dto";
 import AnimalsDtoToModelMapper from "../mappers/animals.dto.to.model.mapper";
@@ -14,37 +13,58 @@ export class AnimalsService implements IAnimalsService {
         this.animalsRepository = animalsRepository
     }
 
-    public async GetAll(): Promise<AnimalModel[]> {
-        return await this.animalsRepository.GetAll();
-    }
+    public async GetAll(): Promise<BaseResponse<AnimalModel[]>> {
+        try {
+            const animals = await this.animalsRepository.GetAll();
+            return new BaseResponse(true, undefined, animals);
+        } 
+        catch (exception) {
+            return new BaseResponse(false, "An error happened when trying to get the animals.");
+        };
+    };
     
-    public async Insert(animal: SaveAnimalDto): Promise<AnimalDto | undefined> {
-        const animalModel = AnimalsDtoToModelMapper.MapSaveAnimalDtoToModel(animal);
+    public async Insert(animal: SaveAnimalDto): Promise<BaseResponse<AnimalDto>> {
+        try {
+            const animalModel = AnimalsDtoToModelMapper.MapSaveAnimalDtoToModel(animal);
 
-        const insertedAnimalId = await this.animalsRepository.Insert(animalModel);
-        const insertedAnimal = await this.animalsRepository.GetById(insertedAnimalId);
+            const insertedAnimalId = await this.animalsRepository.Insert(animalModel);
+            const insertedAnimal = await this.animalsRepository.GetById(insertedAnimalId);
+    
+            if (insertedAnimal) {
+                const animalDto = AnimalsModelToDtoMapper.MapModelToDto(insertedAnimal);
+                return new BaseResponse(true, undefined, animalDto);
+            };
 
-        if (insertedAnimal) {
-            const animalDto = AnimalsModelToDtoMapper.MapModelToDto(insertedAnimal);
-            return animalDto;
+            return new BaseResponse(false, "An error happened when trying to insert the animal.");
         }
+        catch (exception) {
+            return new BaseResponse(false, "An error happened when trying to insert the animal.");
+        };
+    };
 
-        return undefined;
-    }
+    public async GetById(id: string): Promise<BaseResponse<AnimalDto>> {
+        try {
+            const animal = await this.animalsRepository.GetById(id);
 
-    public async GetById(id: string): Promise<AnimalDto | undefined> {
-        const animal = await this.animalsRepository.GetById(id);
-
-        if (animal) {
-            const animalDto = AnimalsModelToDtoMapper.MapModelToDto(animal);
-            return animalDto;
+            if (animal) {
+                const animalDto = AnimalsModelToDtoMapper.MapModelToDto(animal);
+                return new BaseResponse(true, undefined, animalDto);
+            };
+    
+            return new BaseResponse(false, "An error happened when trying to get the animal.");
         }
+        catch (exception) {
+            return new BaseResponse(false, "An error happened when trying to get the animal.");
+        };
+    };
 
-        return undefined;
-    }
-
-    public async Delete(id: string): Promise<string | undefined> {
-        const deletedAnimalId = await this.animalsRepository.Delete(id);
-        return deletedAnimalId;
-    }
-}
+    public async Delete(id: string): Promise<BaseResponse<string>> {
+        try {
+            const deletedAnimalId = await this.animalsRepository.Delete(id);
+            return new BaseResponse(true, undefined, deletedAnimalId);
+        }
+        catch (exception) {
+            return new BaseResponse(false, "An error happened when trying to delete the animal.");
+        };
+    };
+};
