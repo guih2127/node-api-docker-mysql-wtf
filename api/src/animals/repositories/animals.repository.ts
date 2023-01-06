@@ -25,9 +25,10 @@ export class AnimalsRepository implements IAnimalsRepository {
             return x.id === id 
         });
 
+        if (removeIndex < 0)
+            return undefined;
+            
         const removedAnimal = this.animals.splice(removeIndex, 1);
-        if (removedAnimal)
-            return removedAnimal[0].id;
-        return undefined;
+        return removedAnimal[0].id;
     }
 }

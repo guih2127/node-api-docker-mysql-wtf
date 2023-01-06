@@ -33,7 +33,7 @@ describe("AnimalsService", () => {
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
             expect(result).toEqual(animalsMockObjects.animalDtoMock);
         });
-    })
+    });
 
     describe("GetById", () => {
         it("Should get an animal by id", async () => {
@@ -52,6 +52,24 @@ describe("AnimalsService", () => {
 
             expect(animalsRepository.GetById).toHaveBeenCalledWith(animalsMockObjects.guidMockedValueNonExistent);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
+            expect(result).toEqual(undefined);
+        });
+    });
+
+    describe("Delete", () => {
+        it("Should delete an animal", async () => {
+            animalsRepository.Delete = jest.fn().mockReturnValueOnce(animalsMockObjects.guidMockedValue1);
+            const result = await animalsService.Delete(animalsMockObjects.guidMockedValue1);
+
+            expect(animalsRepository.Delete).toHaveBeenCalledWith(animalsMockObjects.guidMockedValue1);
+            expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
+            expect(result).toEqual(animalsMockObjects.guidMockedValue1);
+        })
+        it("Should return undefined if there is no animal with the id informed", async () => {
+            animalsRepository.Delete = jest.fn().mockReturnValueOnce(undefined);
+            const result = await animalsService.Delete(animalsMockObjects.guidMockedValueNonExistent);
+
+            expect(animalsRepository.Delete).toHaveBeenCalledWith(animalsMockObjects.guidMockedValueNonExistent);
             expect(result).toEqual(undefined);
         })
     });

@@ -36,7 +36,7 @@ describe("AnimalsRepository", () => {
     })
 
     describe("GetById", () => {
-        it ("Should get an animal by id", async () => {
+        it("Should get an animal by id", async () => {
             const result = await animalsRepository.GetById(animalsMockObjects.guidMockedValue1);
 
             expect(result).toBeInstanceOf(AnimalModel);
@@ -49,13 +49,22 @@ describe("AnimalsRepository", () => {
     })
 
     describe("Delete", () => {
-        it ("Should delete an animal", async () => {
-            animalsRepository.animals = animalsMockObjects.animalsMock;
+        it("Should delete an animal", async () => {
+            animalsRepository.animals = [...animalsMockObjects.animalsMock];
             const result = await animalsRepository.Delete(animalsMockObjects.guidMockedValue1);
             const animals = await animalsRepository.GetAll();
 
             expect(result).toEqual(animalsMockObjects.guidMockedValue1);
             expect(animals.length).toEqual(1);
+        })
+        it("Should return undefined if there is no animal with the id informed", async () => {
+            animalsRepository.animals = [...animalsMockObjects.animalsMock];
+            console.log(animalsRepository.animals)
+            const result = await animalsRepository.Delete(animalsMockObjects.guidMockedValueNonExistent);
+            const animals = await animalsRepository.GetAll();
+
+            expect(result).toBeUndefined();
+            expect(animals.length).toEqual(2);
         })
     })
 });
