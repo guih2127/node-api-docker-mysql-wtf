@@ -1,6 +1,7 @@
 import ModelCreationUtils from "../../utils/model.creation.utils";
 import { AnimalDto } from "../dtos/animal.dto";
 import { SaveAnimalDto } from "../dtos/save.animal.dto";
+import AnimalsModelToDtoMapper from "../mappers/animals.model.to.dto.mapper";
 import { AnimalModel } from "../models/animals.model";
 import { IAnimalsRepository } from "../repositories/interfaces/animals.repository";
 import { IAnimalsService } from "./interfaces/animals.service";
@@ -17,30 +18,13 @@ export class AnimalsService implements IAnimalsService {
     }
     
     public async Insert(animal: SaveAnimalDto): Promise<AnimalDto | undefined> {
-        const animalModel = new AnimalModel(
-            ModelCreationUtils.CreateGuid(),
-            animal.name,
-            animal.species,
-            animal.breed,
-            animal.photo,
-            animal.adopted,
-            animal.userId
-        );
+        const animalModel = AnimalsModelToDtoMapper.MapSaveAnimalDtoToModel(animal);
 
         const insertedAnimalId = await this.animalsRepository.Insert(animalModel);
         const insertedAnimal = await this.animalsRepository.GetById(insertedAnimalId);
 
         if (insertedAnimal) {
-            const animalDto = new AnimalDto(
-                insertedAnimal?.id,
-                insertedAnimal.name,
-                insertedAnimal.species,
-                insertedAnimal.breed,
-                insertedAnimal.photo,
-                insertedAnimal.adopted,
-                insertedAnimal.userId
-            );
-
+            const animalDto = AnimalsModelToDtoMapper.MapModelToDto(insertedAnimal);
             return animalDto;
         }
 
@@ -51,16 +35,7 @@ export class AnimalsService implements IAnimalsService {
         const animal = await this.animalsRepository.GetById(id);
 
         if (animal) {
-            const animalDto = new AnimalDto(
-                animal?.id,
-                animal.name,
-                animal.species,
-                animal.breed,
-                animal.photo,
-                animal.adopted,
-                animal.userId
-            );
-
+            const animalDto = AnimalsModelToDtoMapper.MapModelToDto(animal);
             return animalDto;
         }
 
