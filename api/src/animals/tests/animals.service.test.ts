@@ -1,3 +1,5 @@
+import FailResponse from "../../responses/fail.response";
+import SuccessResponse from "../../responses/success.response";
 import ModelCreationUtils from "../../utils/model.creation.utils";
 import { AnimalDto } from "../dtos/animal.dto";
 import { AnimalsRepository } from "../repositories/animals.repository";
@@ -10,13 +12,20 @@ const animalsService = new AnimalsService(animalsRepository);
 describe("AnimalsService", () => {
     describe("GetAll", () => {
         it("Should return all animals", async () => {
-            const animals = await animalsService.GetAll();
-            expect(animals).toBe(animalsMockObjects.animalsMock)
+            const result = await animalsService.GetAll();
+            expect(result).toBeInstanceOf(SuccessResponse<AnimalDto[]>);
+
+            const resultResponse = result as SuccessResponse<AnimalDto[]>;
+            expect(resultResponse.statusCode).toEqual(200);
+            expect(resultResponse.responseObject).toEqual(animalsMockObjects.animalsMock);
         });
         it("Should return an empty array if there are no animals", async () => {
             animalsRepository.GetAll = jest.fn().mockReturnValueOnce([]);
             const result = await animalsService.GetAll();
-            expect(result).toEqual([]);
+
+            const resultResponse = result as SuccessResponse<AnimalDto[]>;
+            expect(resultResponse.statusCode).toEqual(200);
+            expect(resultResponse.responseObject).toEqual([]);
         });
     });
 
@@ -31,7 +40,11 @@ describe("AnimalsService", () => {
             expect(animalsRepository.Insert).toHaveBeenCalledTimes(1);
             expect(animalsRepository.GetById).toHaveBeenCalledWith(animalsMockObjects.guidMockedValue3);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toEqual(animalsMockObjects.animalDtoMock);
+            expect(result).toBeInstanceOf(SuccessResponse<AnimalDto>);
+
+            const resultResponse = result as SuccessResponse<AnimalDto>;
+            expect(resultResponse.statusCode).toEqual(201);
+            expect(resultResponse.responseObject).toEqual(animalsMockObjects.animalDtoMock);
         });
     });
 
@@ -43,8 +56,11 @@ describe("AnimalsService", () => {
 
             expect(animalsRepository.GetById).toHaveBeenCalledWith(animalsMockObjects.guidMockedValue1);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toBeInstanceOf(AnimalDto);
-            expect(result).toEqual(animalsMockObjects.firstAnimalDtoMock);
+            expect(result).toBeInstanceOf(SuccessResponse<AnimalDto>);
+
+            const resultResponse = result as SuccessResponse<AnimalDto>;
+            expect(resultResponse.statusCode).toEqual(200);
+            expect(resultResponse.responseObject).toEqual(animalsMockObjects.firstAnimalDtoMock);
         });
         it("Should return undefined if there is no animal with the id informed", async () => {
             animalsRepository.GetById = jest.fn().mockReturnValueOnce(undefined);
@@ -52,7 +68,10 @@ describe("AnimalsService", () => {
 
             expect(animalsRepository.GetById).toHaveBeenCalledWith(animalsMockObjects.guidMockedValueNonExistent);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toEqual(undefined);
+            expect(result).toBeInstanceOf(FailResponse<AnimalDto>);
+
+            const resultResponse = result as FailResponse<AnimalDto>;
+            expect(resultResponse.statusCode).toEqual(401);
         });
     });
 
@@ -63,14 +82,19 @@ describe("AnimalsService", () => {
 
             expect(animalsRepository.Delete).toHaveBeenCalledWith(animalsMockObjects.guidMockedValue1);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toEqual(animalsMockObjects.guidMockedValue1);
+            expect(result).toBeInstanceOf(SuccessResponse<string>);
+
+            const resultResponse = result as SuccessResponse<string>;
+            expect(resultResponse.statusCode).toEqual(204);
+            expect(resultResponse.responseObject).toEqual(animalsMockObjects.guidMockedValue1);
         })
         it("Should return undefined if there is no animal with the id informed", async () => {
             animalsRepository.Delete = jest.fn().mockReturnValueOnce(undefined);
             const result = await animalsService.Delete(animalsMockObjects.guidMockedValueNonExistent);
-
             expect(animalsRepository.Delete).toHaveBeenCalledWith(animalsMockObjects.guidMockedValueNonExistent);
-            expect(result).toEqual(undefined);
+
+            const resultResponse = result as FailResponse<string>;
+            expect(resultResponse.statusCode).toEqual(500);
         })
     });
 });
