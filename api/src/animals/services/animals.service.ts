@@ -55,7 +55,7 @@ export class AnimalsService implements IAnimalsService {
                 return new SuccessResponse(200, animalDto);
             }
     
-            return new FailResponse(401, "The animal was not found.");
+            return new FailResponse(404, "The animal was not found.");
         } catch (exception) {
             return new FailResponse(500, "An error occurred when trying to get the animal.");
         }

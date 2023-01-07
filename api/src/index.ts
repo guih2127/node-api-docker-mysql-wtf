@@ -10,6 +10,8 @@ app.get('/', (req, res) => {
     res.send('Bem-vindo!!!!!!!!!!!');
 });
 
+app.use(express.json());
+
 app.use(cors({
     origin: ['http://localhost:5000']
 }));
