@@ -14,7 +14,7 @@ describe("AnimalsRepository", () => {
             animalsRepository.animals = [];
             const result = await animalsRepository.GetAll();
             expect(result).toEqual([]);
-        })
+        });
     });
 
     describe("Insert", () => {
@@ -32,8 +32,8 @@ describe("AnimalsRepository", () => {
             expect(animals[animals.length - 1].species).toEqual(animalsMockObjects.newAnimalModelMock.species);
             expect(animals[animals.length - 1].userId).toEqual(animalsMockObjects.newAnimalModelMock.userId);
             expect(animals[animals.length - 1].photo).toEqual(animalsMockObjects.newAnimalModelMock.photo);
-        })
-    })
+        });
+    });
 
     describe("GetById", () => {
         it("Should get an animal by id", async () => {
@@ -41,12 +41,12 @@ describe("AnimalsRepository", () => {
 
             expect(result).toBeInstanceOf(AnimalModel);
             expect(result).toEqual(animalsMockObjects.animalsMock[0]);
-        })
+        });
         it("Should return undefined if there is no animal with the id informed", async () => {
             const result = await animalsRepository.GetById(animalsMockObjects.guidMockedValueNonExistent);
             expect(result).toBeUndefined();
-        })
-    })
+        });
+    });
 
     describe("Delete", () => {
         it("Should delete an animal", async () => {
@@ -56,7 +56,7 @@ describe("AnimalsRepository", () => {
 
             expect(result).toEqual(animalsMockObjects.guidMockedValue1);
             expect(animals.length).toEqual(1);
-        })
+        });
         it("Should return undefined if there is no animal with the id informed", async () => {
             animalsRepository.animals = [...animalsMockObjects.animalsMock];
             console.log(animalsRepository.animals)
@@ -65,6 +65,6 @@ describe("AnimalsRepository", () => {
 
             expect(result).toBeUndefined();
             expect(animals.length).toEqual(2);
-        })
-    })
+        });
+    });
 });

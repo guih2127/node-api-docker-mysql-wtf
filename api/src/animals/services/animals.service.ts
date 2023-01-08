@@ -12,8 +12,8 @@ export class AnimalsService implements IAnimalsService {
     private readonly animalsRepository: IAnimalsRepository;
 
     constructor(animalsRepository: IAnimalsRepository) {
-        this.animalsRepository = animalsRepository
-    }
+        this.animalsRepository = animalsRepository;
+    };
 
     public async GetAll(): Promise<BaseResult<AnimalDto[]>> {
         try {
@@ -25,8 +25,8 @@ export class AnimalsService implements IAnimalsService {
             return new SuccessResult(200, animalsDto);
         } catch (exception) {
             return new FailResult(500, "An error occurred when trying to get the animals.");
-        }
-    }
+        };
+    };
     
     public async Insert(animal: SaveAnimalDto): Promise<BaseResult<AnimalDto>> {
         try {
@@ -43,8 +43,8 @@ export class AnimalsService implements IAnimalsService {
             return new FailResult(401, "The animal inserted could not be returned.");
         } catch (exception) {
             return new FailResult(500, "An error occurred when trying to insert the animal.");
-        }
-    }
+        };
+    };
 
     public async GetById(id: string): Promise<BaseResult<AnimalDto>> {
         try {
@@ -58,8 +58,8 @@ export class AnimalsService implements IAnimalsService {
             return new FailResult(404, "The animal was not found.");
         } catch (exception) {
             return new FailResult(500, "An error occurred when trying to get the animal.");
-        }
-    }
+        };
+    };
 
     public async Delete(id: string): Promise<BaseResult<string>> {
         try {
@@ -70,6 +70,6 @@ export class AnimalsService implements IAnimalsService {
             return new FailResult(500, "An error occurred when trying to delete the animal.");
         } catch (exception) {
             return new FailResult(500, "An error occurred when trying to delete the animal.");
-        }
-    }
-}
+        };
+    };
+};

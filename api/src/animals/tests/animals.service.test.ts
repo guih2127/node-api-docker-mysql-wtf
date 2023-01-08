@@ -71,7 +71,7 @@ describe("AnimalsService", () => {
             expect(result).toBeInstanceOf(FailResult<AnimalDto>);
 
             const resultResponse = result as FailResult<AnimalDto>;
-            expect(resultResponse.statusCode).toEqual(401);
+            expect(resultResponse.statusCode).toEqual(404);
         });
     });
 
@@ -87,7 +87,7 @@ describe("AnimalsService", () => {
             const resultResponse = result as SuccessResult<string>;
             expect(resultResponse.statusCode).toEqual(204);
             expect(resultResponse.responseObject).toEqual(animalsMockObjects.guidMockedValue1);
-        })
+        });
         it("Should return undefined if there is no animal with the id informed", async () => {
             animalsRepository.Delete = jest.fn().mockReturnValueOnce(undefined);
             const result = await animalsService.Delete(animalsMockObjects.guidMockedValueNonExistent);
@@ -95,6 +95,6 @@ describe("AnimalsService", () => {
 
             const resultResponse = result as FailResult<string>;
             expect(resultResponse.statusCode).toEqual(500);
-        })
+        });
     });
 });
