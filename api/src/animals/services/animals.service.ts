@@ -1,6 +1,6 @@
-import BaseResponse from "../../responses/base.response";
-import FailResponse from "../../responses/fail.response";
-import SuccessResponse from "../../responses/success.response";
+import BaseResult from "../../results/base.result";
+import FailResult from "../../results/fail.result";
+import SuccessResult from "../../results/success.result";
 import { AnimalDto } from "../dtos/animal.dto";
 import { SaveAnimalDto } from "../dtos/save.animal.dto";
 import AnimalsDtoToModelMapper from "../mappers/animals.dto.to.model.mapper";
@@ -15,20 +15,20 @@ export class AnimalsService implements IAnimalsService {
         this.animalsRepository = animalsRepository
     }
 
-    public async GetAll(): Promise<BaseResponse<AnimalDto[]>> {
+    public async GetAll(): Promise<BaseResult<AnimalDto[]>> {
         try {
             const animals = await this.animalsRepository.GetAll();
             const animalsDto = animals.map(x => {
                 return AnimalsModelToDtoMapper.MapModelToDto(x);
             });
 
-            return new SuccessResponse(200, animalsDto);
+            return new SuccessResult(200, animalsDto);
         } catch (exception) {
-            return new FailResponse(500, "An error occurred when trying to get the animals.");
+            return new FailResult(500, "An error occurred when trying to get the animals.");
         }
     }
     
-    public async Insert(animal: SaveAnimalDto): Promise<BaseResponse<AnimalDto>> {
+    public async Insert(animal: SaveAnimalDto): Promise<BaseResult<AnimalDto>> {
         try {
             const animalModel = AnimalsDtoToModelMapper.MapSaveAnimalDtoToModel(animal);
 
@@ -37,39 +37,39 @@ export class AnimalsService implements IAnimalsService {
     
             if (insertedAnimal) {
                 const animalDto = AnimalsModelToDtoMapper.MapModelToDto(insertedAnimal);
-                return new SuccessResponse(201, animalDto);
+                return new SuccessResult(201, animalDto);
             }
 
-            return new FailResponse(401, "The animal inserted could not be returned.");
+            return new FailResult(401, "The animal inserted could not be returned.");
         } catch (exception) {
-            return new FailResponse(500, "An error occurred when trying to insert the animal.");
+            return new FailResult(500, "An error occurred when trying to insert the animal.");
         }
     }
 
-    public async GetById(id: string): Promise<BaseResponse<AnimalDto>> {
+    public async GetById(id: string): Promise<BaseResult<AnimalDto>> {
         try {
             const animal = await this.animalsRepository.GetById(id);
 
             if (animal) {
                 const animalDto = AnimalsModelToDtoMapper.MapModelToDto(animal);
-                return new SuccessResponse(200, animalDto);
+                return new SuccessResult(200, animalDto);
             }
     
-            return new FailResponse(404, "The animal was not found.");
+            return new FailResult(404, "The animal was not found.");
         } catch (exception) {
-            return new FailResponse(500, "An error occurred when trying to get the animal.");
+            return new FailResult(500, "An error occurred when trying to get the animal.");
         }
     }
 
-    public async Delete(id: string): Promise<BaseResponse<string>> {
+    public async Delete(id: string): Promise<BaseResult<string>> {
         try {
             const deletedAnimalId = await this.animalsRepository.Delete(id);
 
             if (deletedAnimalId)
-                return new SuccessResponse(204, deletedAnimalId);
-            return new FailResponse(500, "An error occurred when trying to delete the animal.");
+                return new SuccessResult(204, deletedAnimalId);
+            return new FailResult(500, "An error occurred when trying to delete the animal.");
         } catch (exception) {
-            return new FailResponse(500, "An error occurred when trying to delete the animal.");
+            return new FailResult(500, "An error occurred when trying to delete the animal.");
         }
     }
 }

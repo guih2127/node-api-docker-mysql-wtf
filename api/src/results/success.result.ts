@@ -1,6 +1,6 @@
-import BaseResponse from "./base.response";
+import BaseResult from "./base.result";
 
-export default class SuccessResponse<T> extends BaseResponse<T> {
+export default class SuccessResult<T> extends BaseResult<T> {
     responseObject: T;
 
     constructor(statusCode: number, responseObject: T) {

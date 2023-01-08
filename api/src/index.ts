@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { animalsRouter } from './animals/routes/animals.router';
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost';
 const app = express();
 
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 app.use(express.json());
 
 app.use(cors({
-    origin: ['http://localhost:5000']
+    origin: ['http://localhost:8000']
 }));
 
 app.use('/animals', animalsRouter);

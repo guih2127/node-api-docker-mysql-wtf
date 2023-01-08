@@ -1,5 +1,5 @@
-import FailResponse from "../../responses/fail.response";
-import SuccessResponse from "../../responses/success.response";
+import FailResult from "../../results/fail.result";
+import SuccessResult from "../../results/success.result";
 import ModelCreationUtils from "../../utils/model.creation.utils";
 import { AnimalDto } from "../dtos/animal.dto";
 import { AnimalsRepository } from "../repositories/animals.repository";
@@ -13,9 +13,9 @@ describe("AnimalsService", () => {
     describe("GetAll", () => {
         it("Should return all animals", async () => {
             const result = await animalsService.GetAll();
-            expect(result).toBeInstanceOf(SuccessResponse<AnimalDto[]>);
+            expect(result).toBeInstanceOf(SuccessResult<AnimalDto[]>);
 
-            const resultResponse = result as SuccessResponse<AnimalDto[]>;
+            const resultResponse = result as SuccessResult<AnimalDto[]>;
             expect(resultResponse.statusCode).toEqual(200);
             expect(resultResponse.responseObject).toEqual(animalsMockObjects.animalsMock);
         });
@@ -23,7 +23,7 @@ describe("AnimalsService", () => {
             animalsRepository.GetAll = jest.fn().mockReturnValueOnce([]);
             const result = await animalsService.GetAll();
 
-            const resultResponse = result as SuccessResponse<AnimalDto[]>;
+            const resultResponse = result as SuccessResult<AnimalDto[]>;
             expect(resultResponse.statusCode).toEqual(200);
             expect(resultResponse.responseObject).toEqual([]);
         });
@@ -40,9 +40,9 @@ describe("AnimalsService", () => {
             expect(animalsRepository.Insert).toHaveBeenCalledTimes(1);
             expect(animalsRepository.GetById).toHaveBeenCalledWith(animalsMockObjects.guidMockedValue3);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toBeInstanceOf(SuccessResponse<AnimalDto>);
+            expect(result).toBeInstanceOf(SuccessResult<AnimalDto>);
 
-            const resultResponse = result as SuccessResponse<AnimalDto>;
+            const resultResponse = result as SuccessResult<AnimalDto>;
             expect(resultResponse.statusCode).toEqual(201);
             expect(resultResponse.responseObject).toEqual(animalsMockObjects.animalDtoMock);
         });
@@ -56,9 +56,9 @@ describe("AnimalsService", () => {
 
             expect(animalsRepository.GetById).toHaveBeenCalledWith(animalsMockObjects.guidMockedValue1);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toBeInstanceOf(SuccessResponse<AnimalDto>);
+            expect(result).toBeInstanceOf(SuccessResult<AnimalDto>);
 
-            const resultResponse = result as SuccessResponse<AnimalDto>;
+            const resultResponse = result as SuccessResult<AnimalDto>;
             expect(resultResponse.statusCode).toEqual(200);
             expect(resultResponse.responseObject).toEqual(animalsMockObjects.firstAnimalDtoMock);
         });
@@ -68,9 +68,9 @@ describe("AnimalsService", () => {
 
             expect(animalsRepository.GetById).toHaveBeenCalledWith(animalsMockObjects.guidMockedValueNonExistent);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toBeInstanceOf(FailResponse<AnimalDto>);
+            expect(result).toBeInstanceOf(FailResult<AnimalDto>);
 
-            const resultResponse = result as FailResponse<AnimalDto>;
+            const resultResponse = result as FailResult<AnimalDto>;
             expect(resultResponse.statusCode).toEqual(401);
         });
     });
@@ -82,9 +82,9 @@ describe("AnimalsService", () => {
 
             expect(animalsRepository.Delete).toHaveBeenCalledWith(animalsMockObjects.guidMockedValue1);
             expect(animalsRepository.GetById).toHaveBeenCalledTimes(1);
-            expect(result).toBeInstanceOf(SuccessResponse<string>);
+            expect(result).toBeInstanceOf(SuccessResult<string>);
 
-            const resultResponse = result as SuccessResponse<string>;
+            const resultResponse = result as SuccessResult<string>;
             expect(resultResponse.statusCode).toEqual(204);
             expect(resultResponse.responseObject).toEqual(animalsMockObjects.guidMockedValue1);
         })
@@ -93,7 +93,7 @@ describe("AnimalsService", () => {
             const result = await animalsService.Delete(animalsMockObjects.guidMockedValueNonExistent);
             expect(animalsRepository.Delete).toHaveBeenCalledWith(animalsMockObjects.guidMockedValueNonExistent);
 
-            const resultResponse = result as FailResponse<string>;
+            const resultResponse = result as FailResult<string>;
             expect(resultResponse.statusCode).toEqual(500);
         })
     });

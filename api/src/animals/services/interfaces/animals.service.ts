@@ -1,10 +1,10 @@
-import BaseResponse from "../../../responses/base.response";
+import BaseResult from "../../../results/base.result";
 import { AnimalDto } from "../../dtos/animal.dto";
 import { SaveAnimalDto } from "../../dtos/save.animal.dto";
 
 export interface IAnimalsService {
-    GetAll(): Promise<BaseResponse<AnimalDto[]>>;
-    Insert(animal: SaveAnimalDto): Promise<BaseResponse<AnimalDto>>;
-    GetById(id: string): Promise<BaseResponse<AnimalDto>>;
-    Delete(id: string): Promise<BaseResponse<string>>;
+    GetAll(): Promise<BaseResult<AnimalDto[]>>;
+    Insert(animal: SaveAnimalDto): Promise<BaseResult<AnimalDto>>;
+    GetById(id: string): Promise<BaseResult<AnimalDto>>;
+    Delete(id: string): Promise<BaseResult<string>>;
 };

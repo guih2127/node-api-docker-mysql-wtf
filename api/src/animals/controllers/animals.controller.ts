@@ -1,7 +1,6 @@
 import express from 'express';
-import FailResponse from '../../responses/fail.response';
-import SuccessResponse from '../../responses/success.response';
-import { AnimalDto } from '../dtos/animal.dto';
+import { SendControllerResponse, ValidateBodyAndThrowErrorsIfNecessary } from '../../utils/controller.utils';
+import { SaveAnimalDto } from '../dtos/save.animal.dto';
 import { IAnimalsService } from '../services/interfaces/animals.service';
 
 export class AnimalsController {
@@ -12,39 +11,25 @@ export class AnimalsController {
     }
 
     public async GetAllAnimals(req: express.Request, res: express.Response): Promise<void> {
-        const response = await this.animalsService.GetAll();
-
-        if (response instanceof SuccessResponse)
-            res.status(response.statusCode).send(response.responseObject);
-        else if (response instanceof FailResponse)
-            res.status(response.statusCode).json({ message: response.message }).send()
+        const result = await this.animalsService.GetAll();
+        await SendControllerResponse(res, result);
     }
 
     public async InsertAnimal(req: express.Request, res: express.Response): Promise<void> {
-        const animalBody = req.body as AnimalDto;
-        const response = await this.animalsService.Insert(animalBody);
+        await ValidateBodyAndThrowErrorsIfNecessary(SaveAnimalDto, req, res);
+        const animalBody = req.body as SaveAnimalDto;
+        const result = await this.animalsService.Insert(animalBody);
 
-        if (response instanceof SuccessResponse)
-            res.status(response.statusCode).send(response.responseObject);
-        else if (response instanceof FailResponse)
-            res.status(response.statusCode).json({ message: response.message }).send()
+        await SendControllerResponse(res, result);
     }
 
     public async GetAnimalById(req: express.Request, res: express.Response): Promise<void> {
-        const response = await this.animalsService.GetById(req.params.id);
-
-        if (response instanceof SuccessResponse)
-            res.status(response.statusCode).send(response.responseObject);
-        else if (response instanceof FailResponse)
-            res.status(response.statusCode).json({ message: response.message }).send();
+        const result = await this.animalsService.GetById(req.params.id);
+        await SendControllerResponse(res, result);
     }
 
     public async DeleteAnimal(req: express.Request, res: express.Response): Promise<void> {
-        const response = await this.animalsService.Delete(req.params.id);
-
-        if (response instanceof SuccessResponse)
-            res.status(response.statusCode).send(response.responseObject);
-        else if (response instanceof FailResponse)
-            res.status(response.statusCode).json({ message: response.message }).send()
+        const result = await this.animalsService.Delete(req.params.id);
+        await SendControllerResponse(res, result);
     }
 }
