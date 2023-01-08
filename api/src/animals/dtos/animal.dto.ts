@@ -23,5 +23,5 @@ export class AnimalDto {
         this.photo = photo;
         this.adopted = adopted;
         this.userId = userId;
-        }
+    }
 }

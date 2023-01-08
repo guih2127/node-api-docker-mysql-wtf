@@ -31,17 +31,11 @@ export async function ValidateBody(classToConvert: any, body: string): Promise<V
                 errorTexts = errorTexts.concat(errorItem.constraints);
             };
 
+            console.log(errorTexts)
+
             result.error = errorTexts;
         };
     });
 
     return result;
-};
-
-export async function ValidateBodyAndThrowErrorsIfNecessary(dto: any, req: express.Request, res: express.Response): Promise<void> {
-    const conversionResult = await ValidateBody(dto, req.body);
-
-    if (conversionResult.error) {
-        res.status(400).send(conversionResult.error);
-    };
 };
